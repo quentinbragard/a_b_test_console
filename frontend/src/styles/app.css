@@ -1,0 +1,25 @@
+.column-title {
+    font-weight: bold;
+    font-size: 2vh;
+    color:black;
+    margin-top: 10%;
+  }
+  
+  
+  .controler-button-column {
+    position:absolute;
+    top: 50%;
+    margin: 0;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+  .experiment-column {
+    flex: 1;
+    border: solid 1px;
+    border-color: black;
+    color: white;
+    text-align: center;
+    border-top: hidden;
+    border-left: hidden;
+    border-bottom: hidden;
+  }

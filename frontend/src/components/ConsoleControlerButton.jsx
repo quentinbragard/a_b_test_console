@@ -1,10 +1,10 @@
 import React from "react";
-import "../styles/index.css";
+import "../styles/controler-button.css";
 
 function ConsoleControlerButton(props) {
   return (
     <button className="new-experiment-btn" onClick={props.handleClick}>
-      + Add new experiment
+      {props.buttonName}
     </button>
   );
 }

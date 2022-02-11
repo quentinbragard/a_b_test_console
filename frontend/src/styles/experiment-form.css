@@ -1,0 +1,23 @@
+.new-experiment-form {
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    border-radius: 8px;
+  }
+  
+.new-experiment-form-border-style {
+    border: solid 0.2vh;
+    border-color: white;
+  
+  }
+.new-experiment-form-background {
+    background-color: black;
+  }
+.new-experiment-form-primary {
+    color:white;
+    text-transform: lowercase;
+  }
+.new-experiment-form-secondary {
+    color: black;
+    text-transform: lowercase;
+  }

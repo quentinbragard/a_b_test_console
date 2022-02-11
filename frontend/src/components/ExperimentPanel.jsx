@@ -6,7 +6,6 @@ import { ExperimentContext } from "./App.jsx";
 
 function ExperimentPanel(props) {
   const { experiments } = useContext(ExperimentContext);
-
   if (experiments.isLoading) {
     return (
       <div>
@@ -37,6 +36,17 @@ function ExperimentPanel(props) {
           <Col className="experiment-column">
             <div className="column-title">Running Experiments</div>
             {experiments.runningExperiments.map((experiment) => {
+              return (
+                <ExperimentCard
+                  key={experiment.experiment_track}
+                  experiment={experiment}
+                />
+              );
+            })}
+          </Col>
+          <Col className="experiment-column">
+            <div className="column-title">Ready Experiments</div>
+            {experiments.readyExperiments.map((experiment) => {
               return (
                 <ExperimentCard
                   key={experiment.experiment_track}

@@ -1,0 +1,73 @@
+.experiment-card {
+    background: transparent;
+    border : solid 0.2vh;
+    border-color: black;
+    border-radius: 2vh;
+    cursor:pointer;
+    text-align: center;
+  }
+  .experiment-title {
+    color:black;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.5vh;
+    text-align: center;
+  /* Gradients/Holo */
+    font-style: normal;
+    font-weight: bold;
+    letter-spacing: -0.075vh;
+    text-transform: uppercase;
+  }
+  
+  .experiment-subtitle {
+    color: #4C4C4C;
+    text-align: center;
+    font-size: 1.2vh;
+    text-align: center;
+  /* Gradients/Holo */
+    font-style: italic;
+  }
+
+  .experiment-activation-info-list {
+    color: black;
+    font-style: italic;
+    text-align: center;
+    font-size: 0.8vh;
+  }
+
+  .experiment-card-info-tag {
+    background-color: black;
+    color: white;
+    border-radius: 25vh;
+    text-align: center;
+    font-style: italic;
+    font-size: 0.9vh;
+    margin: 1%;
+    padding: 2%;
+  }
+  .experiment-card-positive-result-tag {
+    background-color: #FFE746;
+    color: white;
+    font-weight: bold;
+    border-radius: 25vh;
+    text-align: center;
+    font-style: italic;
+    font-size: 0.9vh;
+    margin: 1%;
+    padding: 2%;
+    height: 1vh;
+    width: 1vh;
+  }
+  .experiment-card-negative-result-tag {
+    background-color: #FF1111;
+    color: white;
+    font-weight: bold;
+    border-radius: 25vh;
+    text-align: center;
+    font-style: italic;
+    font-size: 0.9vh;
+    margin: 1%;
+    padding: 2%;
+    height: 1vh;
+    width: 1vh;
+  }

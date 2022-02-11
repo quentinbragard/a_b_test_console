@@ -1,0 +1,18 @@
+.new-experiment-btn {
+    color: white;
+    text-align: center;
+    font-size: 1.5vh;
+  /* Gradients/Holo */
+    background: black;
+    border-radius: 0.5vh;
+    border-color: #4C4C4C;
+    font-family: Gilroy;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 120%;
+    letter-spacing: -0.075vh;
+    text-transform: lowercase;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+  }
