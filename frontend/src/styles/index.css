@@ -4,6 +4,8 @@ html, body, #app, #app>div {
 body {
   
   background: linear-gradient(45deg, #FA00FF 0%,  #FFC700 68.24%, #80FF00 100%);
+  background-repeat:no-repeat;
+  background-attachment: fixed;
   font-family: Gilroy;
   color: black;
 }

@@ -6,6 +6,11 @@
     cursor:pointer;
     text-align: center;
   }
+
+  .close-card-button {
+    margin-top:2%;
+    margin-left:2%;
+  }
   .experiment-title {
     color:black;
     font-weight: bold;
@@ -28,15 +33,16 @@
     font-style: italic;
   }
 
-  .experiment-activation-info-list {
+  .experiment-info-list {
     color: black;
     font-style: italic;
     text-align: center;
-    font-size: 0.8vh;
+    font-size: 1.vh;
+    margin-top: 1vh;
   }
 
   .experiment-card-info-tag {
-    background-color: black;
+    background-color: #FF44CC;
     color: white;
     border-radius: 25vh;
     text-align: center;
@@ -45,6 +51,31 @@
     margin: 1%;
     padding: 2%;
   }
+
+  .experiment-card-missing-info-tag {
+    background-color: transparent;
+    color: #4C4C4C;
+    border-radius: 25vh;
+    border-color: #4C4C4C;
+    border-style: dashed;
+    text-align: center;
+    font-style: italic;
+    font-size: 0.9vh;
+    margin: 1%;
+    padding: 2%;
+  }
+
+  .experiment-activation-info-tag {
+    background-color: black;
+    color: white;
+    border-radius: 25vh;
+    text-align: center;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 0.9vh;
+    padding: 2%;
+  }
+
   .experiment-card-positive-result-tag {
     background-color: #FFE746;
     color: white;
@@ -70,4 +101,39 @@
     padding: 2%;
     height: 1vh;
     width: 1vh;
+  }
+
+  .experiment-description {
+    font-size: 1vh;
+  }
+  .experiment-platform-logo {
+    height:3vh;
+    width: 3h;
+  }
+
+  .hide {
+    display: none;
+  }
+      
+  .experiment-card-info-tag:hover + .hide {
+    display: block;
+    color: red;
+  }
+
+  .update-experiment-status-btn {
+    color: white;
+    text-align: center;
+    font-size: 1vh;
+    font-weight: bold;
+  /* Gradients/Holo */
+    background: #4C4C4C;
+    border-color: #4C4C4C;
+    font-family: Gilroy;
+    font-style: normal;
+    line-height: 120%;
+    letter-spacing: -0.075vh;
+    text-transform: lowercase;
+    border-radius: 0.5vh;
+    margin-top:2%;
+    margin-right:2%;
   }

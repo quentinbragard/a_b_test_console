@@ -1,104 +1,71 @@
 import React, { useContext } from "react";
-import { Card, CardBody, CardTitle, CardSubtitle } from "reactstrap";
-import { ExperimentExpandedCardContext } from "./App.jsx";
+import { useNavigate } from "react-router-dom";
+import PassedExperimentCard from "./PassedExperimentCard.jsx";
+import RunningExperimentCard from "./RunningExperimentCard.jsx";
+import ReadyExperimentCard from "./ReadyExperimentCard.jsx";
+import UpcomingExperimentCard from "./UpcomingExperimentCard.jsx";
+import ExperimentContext from "./ExperimentContext.jsx";
 import "../styles/experiment-card.css";
 
-function ExperimentCard(props) {
-  const { setExperimentExpandedCard } = useContext(
-    ExperimentExpandedCardContext
-  );
-  const handleCick = (experiment) => {
-    setExperimentExpandedCard(experiment);
-    console.log(experiment);
-  };
-  const findRemainingDays = (experiment) => {
-    const start_date = new Date(props.experiment.start_date);
-    const end_date = new Date(props.experiment.end_date);
-    var diff = new Date(end_date.getTime() - start_date.getTime());
-    console.log(typeof diff);
-    return diff.getUTCDate() - 1;
+const getExperimentCardComponent = (experiment) => {
+  switch (experiment.status) {
+    case "passed":
+      return PassedExperimentCard;
+    case "running":
+      return RunningExperimentCard;
+    case "ready":
+      return ReadyExperimentCard;
+    case "upcoming":
+      return UpcomingExperimentCard;
+  }
+};
+
+const ExperimentCard = ({ experiment, track }) => {
+  const ExperimentCardComponent = getExperimentCardComponent(experiment);
+  const { setSelectedExperiment, deleteExperiment, deleteActivation } =
+    useContext(ExperimentContext);
+  const navigate = useNavigate();
+
+  const handleCloseExperiment = async (experiment) => {
+    const confirmBox = window.confirm(
+      "Do you really want to delete this Experiment?"
+    );
+    if (confirmBox === true) {
+      deleteExperiment(experiment.experiment_track);
+    }
   };
 
-  if (props.experiment.status === "running") {
-    return (
-      <div
-        key={props.track}
-        style={{ margin: "5%" }}
-        onClick={() => handleCick(props.experiment)}
-      >
-        <Card className="experiment-card">
-          <CardBody>
-            <CardTitle className="experiment-title">
-              {props.experiment.experiment_name}
-            </CardTitle>
-            <CardSubtitle className="experiment-subtitle">
-              {props.experiment.experiment_track}
-            </CardSubtitle>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginBottom: "5%",
-              }}
-            >
-              <div className="experiment-card-info-tag">
-                {props.experiment.step}
-              </div>
-              <div className="experiment-card-info-tag">
-                {props.experiment.platform}
-              </div>
-              <div className="experiment-card-info-tag">
-                {props.experiment.version}
-              </div>
-            </div>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <div className="experiment-card-positive-result-tag"></div>
-              <div className="experiment-card-positive-result-tag"></div>
-              <div className="experiment-card-positive-result-tag"></div>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginBottom: "5%",
-              }}
-            >
-              <div className="experiment-card-negative-result-tag"></div>
-              <div className="experiment-card-negative-result-tag"></div>
-            </div>
-            <div className="experiment-activation-info-list">
-              {" "}
-              Activation: {props.experiment.experiment_activation}
-            </div>
-            <div className="experiment-activation-info-list">
-              {" "}
-              Remaining Days: {findRemainingDays(props.experiment)}
-            </div>
-          </CardBody>
-        </Card>
-      </div>
+  const handleCloseActivation = async (experiment) => {
+    const confirmBox = window.confirm(
+      "Do you really want to delete this Activation?"
     );
-  } else {
-    return (
-      <div
-        key={props.track}
-        style={{ margin: "5%" }}
-        onClick={() => handleCick(props.experiment)}
-      >
-        <Card className="experiment-card">
-          <CardBody>
-            <CardTitle className="experiment-title">
-              {props.experiment.experiment_name}
-            </CardTitle>
-            <CardSubtitle className="experiment-subtitle">
-              {props.experiment.experiment_track}
-            </CardSubtitle>
-            <div style={{ display: "flex", justifyContent: "center" }}></div>
-          </CardBody>
-        </Card>
-      </div>
+    if (confirmBox === true) {
+      deleteActivation({
+        activation_id: experiment.activation_id,
+        experiment_track: experiment.experiment_track,
+      });
+    }
+  };
+
+  const handleClick = () => {
+    setSelectedExperiment(experiment);
+    navigate(
+      `/experiments/${experiment.experiment_track}-${experiment.activation_id}`
     );
-  }
-}
+  };
+
+  return (
+    <ExperimentCardComponent
+      track={track}
+      experiment={experiment}
+      onClick={handleClick}
+      onClose={
+        experiment.status === "running" || experiment.status === "passed"
+          ? () => handleCloseActivation(experiment)
+          : () => handleCloseExperiment(experiment)
+      }
+    />
+  );
+};
 
 export default ExperimentCard;

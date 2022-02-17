@@ -1,12 +1,19 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Col, Row, Spinner } from "react-bootstrap";
 import ExperimentCard from "./ExperimentCard.jsx";
 import "../styles/index.css";
-import { ExperimentContext } from "./App.jsx";
+import ExperimentContext from "./ExperimentContext.jsx";
 
-function ExperimentPanel(props) {
-  const { experiments } = useContext(ExperimentContext);
-  if (experiments.isLoading) {
+const ExperimentPanel = () => {
+  const {
+    passedExperiments,
+    runningExperiments,
+    readyExperiments,
+    upcomingExperiments,
+    loading,
+  } = useContext(ExperimentContext);
+
+  if (loading)
     return (
       <div>
         <Row style={{ height: "100vh" }} className="justify-content-md-center">
@@ -18,58 +25,57 @@ function ExperimentPanel(props) {
         </Row>
       </div>
     );
-  } else {
-    return (
-      <div>
-        <Row style={{ height: "100vh" }} className="justify-content-md-center">
-          <Col className="experiment-column">
-            <div className="column-title">Passed Experiments</div>
-            {experiments.passedExperiments.map((experiment) => {
-              return (
-                <ExperimentCard
-                  key={experiment.experiment_track}
-                  experiment={experiment}
-                />
-              );
-            })}
-          </Col>
-          <Col className="experiment-column">
-            <div className="column-title">Running Experiments</div>
-            {experiments.runningExperiments.map((experiment) => {
-              return (
-                <ExperimentCard
-                  key={experiment.experiment_track}
-                  experiment={experiment}
-                />
-              );
-            })}
-          </Col>
-          <Col className="experiment-column">
-            <div className="column-title">Ready Experiments</div>
-            {experiments.readyExperiments.map((experiment) => {
-              return (
-                <ExperimentCard
-                  key={experiment.experiment_track}
-                  experiment={experiment}
-                />
-              );
-            })}
-          </Col>
-          <Col className="experiment-column">
-            <div className="column-title">Upcoming Experiments</div>
-            {experiments.upcomingExperiments.map((experiment) => {
-              return (
-                <ExperimentCard
-                  key={experiment.experiment_track}
-                  experiment={experiment}
-                />
-              );
-            })}
-          </Col>
-        </Row>
-      </div>
-    );
-  }
-}
+
+  return (
+    <div>
+      <Row style={{ height: "100vh" }} className="justify-content-md-center">
+        <Col className="experiment-column">
+          <div className="column-title">Passed Experiments</div>
+          {passedExperiments.map((experiment) => {
+            return (
+              <ExperimentCard
+                key={experiment.experiment_track}
+                experiment={experiment}
+              />
+            );
+          })}
+        </Col>
+        <Col className="experiment-column">
+          <div className="column-title">Running Experiments</div>
+          {runningExperiments.map((experiment) => {
+            return (
+              <ExperimentCard
+                key={experiment.experiment_track}
+                experiment={experiment}
+              />
+            );
+          })}
+        </Col>
+        <Col className="experiment-column">
+          <div className="column-title">Ready Experiments</div>
+          {readyExperiments.map((experiment) => {
+            return (
+              <ExperimentCard
+                key={experiment.experiment_track}
+                experiment={experiment}
+              />
+            );
+          })}
+        </Col>
+        <Col className="experiment-column">
+          <div className="column-title">Upcoming Experiments</div>
+          {upcomingExperiments.map((experiment) => {
+            return (
+              <ExperimentCard
+                key={experiment.experiment_track}
+                experiment={experiment}
+              />
+            );
+          })}
+        </Col>
+      </Row>
+    </div>
+  );
+};
 
 export default ExperimentPanel;

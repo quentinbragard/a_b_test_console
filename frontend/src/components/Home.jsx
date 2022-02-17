@@ -1,29 +1,44 @@
-import React from "react";
+import "../styles/app.css";
+import React, { useState, useContext } from "react";
 import { Col, Row } from "react-bootstrap";
-import ConsoleControlerButton from "./ConsoleControlerButton.jsx";
 import ExperimentPanel from "./ExperimentPanel.jsx";
-import "../styles/controler-button.css";
+import NewExperimentModal from "./NewExperimentModal";
+import ExperimentContext from "./ExperimentContext.jsx";
+import Popup from "reactjs-popup";
 
-function Home(props) {
+const ZenlyGlobe = () => (
+  <img src={require("../img/zenly-globe.png")} className="zenly-globe" alt="" />
+);
+
+const AddNewExperimentButton = ({ onClick }) => (
+  <>
+    <button onClick={onClick} className="enabled-experiment-btn">
+      {" "}
+      + Add new experiment{" "}
+    </button>
+  </>
+);
+
+const Home = () => {
+  const { fetchExperiments } = useContext(ExperimentContext);
+  const [showNewExperimentModal, setShowNewExperimentModal] = useState(false);
+  const toggleShowNewExperimentModal = () => {
+    setShowNewExperimentModal(!showNewExperimentModal);
+    console.log(showNewExperimentModal);
+  };
+
   return (
     <Row>
       <Col style={{ position: "relative" }}>
         <Row className="controler-button-column">
-          <ConsoleControlerButton
-            className="new-experiment-btn"
-            buttonName="+ Add new experiment"
-            handleClick={() => props.onClick("new")}
-          />
-          <ConsoleControlerButton
-            className="new-experiment-btn"
-            buttonName="Activate existing experiment"
-            handleClick={() => props.onClick("activate")}
-          />
-          <img
-            src={require("../img/zenly-globe.png")}
-            className="zenly-globe"
-            alt=""
-          />
+          {!showNewExperimentModal ? (
+            <>
+              <AddNewExperimentButton onClick={toggleShowNewExperimentModal} />
+              <ZenlyGlobe />
+            </>
+          ) : (
+            <NewExperimentModal handleClose={toggleShowNewExperimentModal} />
+          )}
         </Row>
       </Col>
       <Col style={{ flex: 5 }}>
@@ -31,6 +46,6 @@ function Home(props) {
       </Col>
     </Row>
   );
-}
+};
 
 export default Home;
