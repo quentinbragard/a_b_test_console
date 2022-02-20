@@ -72,6 +72,8 @@ function ExpandedExperimentInfoCard(props) {
   const allInfo = getFilledAndUnfilledInfo(props.experiment);
   const filledInfo = allInfo[0];
   const unfilledInfo = allInfo[1];
+  console.log(filledInfo);
+  console.log(unfilledInfo);
   const optionsCursorTrueWithMargin = {
     followCursor: true,
     shiftX: -50,

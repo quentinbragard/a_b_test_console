@@ -10,17 +10,27 @@ import "../styles/expanded-experiment.css";
 
 const FirstActivationColumn = (props) => (
   <>
-    <button onClick={props.handleActivation} className="enabled-experiment-btn">
-      {" "}
-      Activate Experiment{" "}
-    </button>
-    <button
-      onClick={props.handleUpdateStatus}
-      className="enabled-experiment-btn"
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+      }}
     >
-      {" "}
-      Update Step{" "}
-    </button>
+      <button
+        onClick={props.handleActivation}
+        className="enabled-experiment-btn"
+      >
+        {" "}
+        Activate Experiment{" "}
+      </button>
+      <button
+        onClick={props.handleUpdateStatus}
+        className="enabled-experiment-btn"
+      >
+        {" "}
+        Update Step{" "}
+      </button>
+    </div>
     <Card className="expanded-experiment-information-card">
       <CardBody>
         <CardTitle className="experiment-title">

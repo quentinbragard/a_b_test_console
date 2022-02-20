@@ -9,9 +9,12 @@ from flask_cors import CORS
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 cors = CORS(app)
-EXPERIMENTS_TABLE_NAME = 'ab-test-monitoring-console.experiments_data.experiments'
-ACTIVATIONS_TABLE_NAME = 'ab-test-monitoring-console.experiments_data.activations'
-EXPERIMENTS_TABLE_COLUMNS = '(experiment_id,experiment_track,experiment_name,experiment_description,status,step,planned_version,is_on_iOS,is_on_Android,experiment_notion_link,specs_link,monitoring_dashboard_link,metrics_dashboard_link,number_of_activation)'
+
+PROJECT_NAME = 'ab-test-monitoring-console'
+DATASET_NAME = 'experiments_data'
+EXPERIMENTS_TABLE_NAME = f'{PROJECT_NAME}.{DATASET_NAME}.experiments'
+ACTIVATIONS_TABLE_NAME = f'{PROJECT_NAME}.{DATASET_NAME}.activations'
+EXPERIMENTS_TABLE_COLUMNS = '(experiment_id,experiment_track,experiment_name,experiment_description,status,step,is_on_iOS,is_on_Android,planned_iOS_version,planned_Android_version,experiment_notion_link,specs_link,monitoring_dashboard_link,metrics_dashboard_link,number_of_activation)'
 ACTIVATION_TABLE_COLUMNS = '(experiment_track,activation_id,platform,version,start_date,end_date,included_countries,excluded_countries,status,step,activation_link)'
 
 
@@ -66,9 +69,9 @@ def find_matching_status(step):
 
 def create_update_insert_query_string(experiment_track_or_activation_id, experiment_info):
     if 'experiment_track' in experiment_info.keys():
-        insert_query = "UPDATE `ab-test-monitoring-console.experiments_data.experiments`"
+        insert_query = f"UPDATE `{EXPERIMENTS_TABLE_NAME}`"
     else:
-        insert_query = "UPDATE `ab-test-monitoring-console.experiments_data.activations`"
+        insert_query = f"UPDATE `{ACTIVATIONS_TABLE_NAME}`"
     if 'platform' in experiment_info.keys():
         insert_query += add_platform_update_query_string(
             experiment_track_or_activation_id, experiment_info['platform'])
@@ -101,7 +104,7 @@ def home():
 def api_all():
     client = bigquery.Client()
     retreive_experiments_info_query = client.query(
-        "SELECT * FROM `ab-test-monitoring-console.experiments_data.experiments`")
+        f"SELECT * FROM `{EXPERIMENTS_TABLE_NAME}`")
     expriments_info = retreive_experiments_info_query.result().to_dataframe()
     response = []
     for experiment in expriments_info:
@@ -113,7 +116,6 @@ def api_all():
 def api_passed_experiments():
     status = flask.request.args.get('status')
     client = bigquery.Client()
-
     if status in ['upcoming', 'ready']:
         retreive_experiments_info_query = client.query(
             f"SELECT * FROM `{EXPERIMENTS_TABLE_NAME}` WHERE status = '{status}'")
@@ -138,9 +140,9 @@ def add_experiment():
     new_page_url = notion.create_page_in_db(
         notion.databases['external - experiment list'], experiment_info, 'experiment')
     experiment_info['experiment_id'] = experiment_id
-    values_to_insert = f'("{experiment_info["experiment_id"]}", "{experiment_info["experiment_track"]}","{experiment_info["experiment_name"]}","{experiment_info["experiment_description"]}","upcoming","selected",null,false,false,"{new_page_url}",null,null,null,0)'
+    values_to_insert = f'("{experiment_info["experiment_id"]}", "{experiment_info["experiment_track"]}","{experiment_info["experiment_name"]}","{experiment_info["experiment_description"]}","upcoming","selected",false,false,null,null,"{new_page_url}",null,null,null,0)'
     insert_query = f"""
-                INSERT INTO `ab-test-monitoring-console.experiments_data.experiments` {EXPERIMENTS_TABLE_COLUMNS}
+                INSERT INTO `{EXPERIMENTS_TABLE_NAME}` {EXPERIMENTS_TABLE_COLUMNS}
                 VALUES
                 {values_to_insert}
             """
@@ -154,7 +156,7 @@ def delete_experiment():
     notion = notionApi()
     experiment_track = flask.request.data.decode('utf-8')
     insert_query = f"""
-                DELETE `ab-test-monitoring-console.experiments_data.experiments`
+                DELETE `{EXPERIMENTS_TABLE_NAME}`
                 WHERE experiment_track = "{experiment_track}"
             """
     client.query(insert_query)
@@ -187,7 +189,7 @@ def activate_experiment():
     experiment_info['step'] = 'running'
     experiment_info['status'] = 'running'
     related_experiment_results = client.query(
-        f"SELECT * FROM `ab-test-monitoring-console.experiments_data.experiments` WHERE experiment_track =  '{experiment_info['experiment_track']}'").result().to_dataframe()
+        f"SELECT * FROM `{EXPERIMENTS_TABLE_NAME}` WHERE experiment_track =  '{experiment_info['experiment_track']}'").result().to_dataframe()
     experiment_name = related_experiment_results['experiment_name'][0]
     number_of_activation = related_experiment_results['number_of_activation'][0]
     experiment_info['experiment_name'] = experiment_name
@@ -198,14 +200,14 @@ def activate_experiment():
     experiment_info['activation_link'] = new_page_url
     values_to_insert = create_values_string(experiment_info)
     insert_activation_query = f"""
-                INSERT INTO `ab-test-monitoring-console.experiments_data.activations` {ACTIVATION_TABLE_COLUMNS}
+                INSERT INTO `{ACTIVATIONS_TABLE_NAME}` {ACTIVATION_TABLE_COLUMNS}
                 VALUES
                 {values_to_insert}
             """
     print(insert_activation_query)
     client.query(insert_activation_query)
     client.query(f"""
-                    UPDATE `ab-test-monitoring-console.experiments_data.experiments`
+                    UPDATE `{EXPERIMENTS_TABLE_NAME}`
                          SET number_of_activation = {number_of_activation}, step = "tested"
                         WHERE experiment_track = "{experiment_info['experiment_track']}"
                 """)
@@ -221,17 +223,17 @@ def delete_activation():
     activation_info = ast.literal_eval(flask.request.data.decode('utf-8'))
     print(activation_info['activation_id'])
     insert_query = f"""
-                DELETE `ab-test-monitoring-console.experiments_data.activations`
+                DELETE `{ACTIVATIONS_TABLE_NAME}`
                 WHERE activation_id = {activation_info['activation_id']}
             """
     client.query(insert_query)
     related_experiment_results = client.query(
-        f"SELECT * FROM `ab-test-monitoring-console.experiments_data.experiments` WHERE experiment_track =  '{activation_info['experiment_track']}'").result().to_dataframe()
+        f"SELECT * FROM `{EXPERIMENTS_TABLE_NAME}` WHERE experiment_track =  '{activation_info['experiment_track']}'").result().to_dataframe()
     print(related_experiment_results)
     number_of_activation = str(
         int(related_experiment_results['number_of_activation'][0]) - 1)
     client.query(f"""
-                    UPDATE `ab-test-monitoring-console.experiments_data.experiments`
+                    UPDATE `{EXPERIMENTS_TABLE_NAME}`
                          SET number_of_activation = {number_of_activation}
                         WHERE experiment_track = "{activation_info['experiment_track']}"
                 """)
@@ -255,6 +257,16 @@ def update_activation():
     notion.update_page_in_db(
         notion.databases['external - activation calendar'], experiment_info, activation_id, 'activation')
     return 'done', 201
+
+
+@app.route("/api/v0/metrics/get", methods=["POST"], strict_slashes=False)
+def get_metrics():
+    activation_info = json.loads(flask.request.data.decode('utf-8'))
+    print(activation_info)
+    client = bigquery.Client()
+    notion = notionApi()
+    activation_id = f"{activation_info['experiment_track']}Act{activation_info['activation_id']}"
+    print(activation_id)
 
 
 app.run()

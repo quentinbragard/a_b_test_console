@@ -42,6 +42,16 @@ function RunningExperimentCard(props) {
               marginBottom: "5%",
             }}
           >
+            {" "}
+            <ExperimentPlatform platform={props.experiment.platform} />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "5%",
+            }}
+          >
             <div className="experiment-card-info-tag">
               {props.experiment.step}
             </div>
@@ -52,16 +62,6 @@ function RunningExperimentCard(props) {
               included_countries={props.experiment.included_countries}
               excluded_countries={props.experiment.excluded_countries}
             />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: "5%",
-            }}
-          >
-            {" "}
-            <ExperimentPlatform platform={props.experiment.platform} />
           </div>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <div className="experiment-card-positive-result-tag"></div>

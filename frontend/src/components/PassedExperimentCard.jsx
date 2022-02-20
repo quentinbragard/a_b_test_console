@@ -41,12 +41,8 @@ function PassedExperimentCard(props) {
               marginBottom: "5%",
             }}
           >
-            <div className="experiment-card-info-tag">
-              {props.experiment.step}
-            </div>
-            <div className="experiment-card-info-tag">
-              {props.experiment.version}
-            </div>
+            {" "}
+            <ExperimentPlatform platform={props.experiment.platform} />
           </div>
           <div
             style={{
@@ -55,8 +51,12 @@ function PassedExperimentCard(props) {
               marginBottom: "5%",
             }}
           >
-            {" "}
-            <ExperimentPlatform platform={props.experiment.platform} />
+            <div className="experiment-card-info-tag">
+              {props.experiment.step}
+            </div>
+            <div className="experiment-card-info-tag">
+              {props.experiment.version}
+            </div>
           </div>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <div className="experiment-card-positive-result-tag"></div>
